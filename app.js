@@ -9,27 +9,17 @@ let products = [];
 
 // --- Smart Pricing Engine ---
 
+const PRICE_POINTS = [
+    2.99, 4.99, 7.99, 9.99, 12.99, 14.99, 19.99, 24.99, 29.99,
+    34.99, 39.99, 44.99, 49.99, 59.99, 69.99, 79.99, 89.99,
+    99.99, 129.99, 149.99, 199.99, 249.99, 299.99
+];
+
 function makeAttractive(rawPrice) {
-    if (rawPrice <= 3) return { price: 2.99, display: '$2.99' };
-    if (rawPrice <= 5) return { price: 4.99, display: '$4.99' };
-    if (rawPrice <= 8) return { price: 7.99, display: '$7.99' };
-    if (rawPrice <= 11) return { price: 9.99, display: '$9.99' };
-    if (rawPrice <= 15) return { price: 12.99, display: '$12.99' };
-    if (rawPrice <= 18) return { price: 14.99, display: '$14.99' };
-    if (rawPrice <= 22) return { price: 19.99, display: '$19.99' };
-    if (rawPrice <= 28) return { price: 24.99, display: '$24.99' };
-    if (rawPrice <= 35) return { price: 29.99, display: '$29.99' };
-    if (rawPrice <= 42) return { price: 34.99, display: '$34.99' };
-    if (rawPrice <= 48) return { price: 39.99, display: '$39.99' };
-    if (rawPrice <= 55) return { price: 44.99, display: '$44.99' };
-    if (rawPrice <= 65) return { price: 49.99, display: '$49.99' };
-    if (rawPrice <= 75) return { price: 59.99, display: '$59.99' };
-    if (rawPrice <= 85) return { price: 69.99, display: '$69.99' };
-    if (rawPrice <= 95) return { price: 79.99, display: '$79.99' };
-    if (rawPrice <= 110) return { price: 89.99, display: '$89.99' };
-    if (rawPrice <= 130) return { price: 99.99, display: '$99.99' };
-    if (rawPrice <= 160) return { price: 129.99, display: '$129.99' };
-    if (rawPrice <= 200) return { price: 149.99, display: '$149.99' };
+    // Round UP to the nearest attractive price point so COG stays at/below target
+    for (const p of PRICE_POINTS) {
+        if (p >= rawPrice) return { price: p, display: `$${p.toFixed(2)}` };
+    }
     const rounded = Math.ceil(rawPrice / 10) * 10 - 0.01;
     return { price: rounded, display: `$${rounded.toFixed(2)}` };
 }
