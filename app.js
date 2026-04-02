@@ -137,14 +137,14 @@ function generatePricing(costPrice, cogPct) {
 
     const variations = [v1, v2, v3, v4, v5, v6];
 
-    // Auto-mark the deal with lowest COG% as best deal
+    // Auto-mark the deal with highest discount (highest COG%) as best deal for customer
     let bestIdx = -1;
-    let lowestCog = Infinity;
+    let highestCog = 0;
     variations.forEach((v, i) => {
         if (i === 0) return;
         const cogVal = parseFloat(v.cog);
-        if (cogVal < lowestCog) {
-            lowestCog = cogVal;
+        if (cogVal > highestCog) {
+            highestCog = cogVal;
             bestIdx = i;
         }
     });
