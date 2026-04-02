@@ -77,8 +77,8 @@ function generatePricing(costPrice, cogPct) {
         totalProfit: (sp - costPrice).toFixed(2),
     };
 
-    // --- 2: Buy 2 - Get $X Off (fixed dollar discount, ~10% off) ---
-    const dollarOff2 = Math.round(sp * 0.10);
+    // --- 2: Buy 2 - Get $5 or $10 Off (pick whichever makes sense for the price) ---
+    const dollarOff2 = (sp >= 30) ? 10 : 5;
     const buy2total = parseFloat((sp * 2 - dollarOff2).toFixed(2));
     const buy2perUnit = buy2total / 2;
     const d2 = makeDeal(2, buy2perUnit);
