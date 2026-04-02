@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaching - Pricing Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>Kaching</h1>
+            <p class="subtitle">Smart pricing calculator</p>
+        </header>
+
+        <main>
+            <!-- Globale COG slider -->
+            <section class="cog-section">
+                <div class="cog-header">
+                    <label>COG % of selling price</label>
+                    <span class="cog-value" id="cogValue">30%</span>
+                </div>
+                <input type="range" id="cogSlider" min="10" max="60" step="1" value="30" class="slider">
+                <div class="slider-labels">
+                    <span>10%</span>
+                    <span>35%</span>
+                    <span>60%</span>
+                </div>
+            </section>
+
+            <!-- Product lijst -->
+            <section class="products-section">
+                <div class="section-header">
+                    <h2>Products</h2>
+                    <button id="addProduct" class="btn btn-primary">+ Product</button>
+                </div>
+
+                <div id="productList" class="product-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
