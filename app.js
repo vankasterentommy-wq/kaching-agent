@@ -112,15 +112,14 @@ function generatePricing(costPrice, cogPct) {
         ...d4,
     };
 
-    // --- 5: Buy 3 - Get $X Off (bigger dollar discount, ~28% off) ---
-    const dollarOff3 = Math.round(sp);
-    const buy3total = parseFloat((sp * 3 - dollarOff3).toFixed(2));
-    const buy3perUnit = buy3total / 3;
+    // --- 5: Buy 3 & Save 20% ---
+    const buy3perUnit = parseFloat((sp * 0.80).toFixed(2));
     const d5 = makeDeal(3, buy3perUnit);
+    const totalSaved3 = parseFloat((sp * 3 - d5.price).toFixed(0));
     const v5 = {
-        label: `Buy 3 - Get $${dollarOff3} Off`,
-        subtitle: `Save $${dollarOff3} on 3 items`,
-        badge: `$${dollarOff3} OFF`,
+        label: 'Buy 3 & Save 20%',
+        subtitle: `Save $${totalSaved3} on 3 items`,
+        badge: '20% OFF',
         badgeColor: 'orange',
         ...d5,
     };
