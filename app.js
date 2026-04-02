@@ -77,27 +77,27 @@ function generatePricing(costPrice, cogPct) {
         totalProfit: (sp - costPrice).toFixed(2),
     };
 
-    // --- 2: Buy 2 - Get $5 Off ---
-    const buy2_5total = parseFloat((sp * 2 - 5).toFixed(2));
-    const buy2_5perUnit = buy2_5total / 2;
-    const d2 = makeDeal(2, buy2_5perUnit);
+    // --- 2: Buy 2 - Get $X Off (fixed dollar discount, ~10% off) ---
+    const dollarOff2 = Math.round(sp * 0.10);
+    const buy2total = parseFloat((sp * 2 - dollarOff2).toFixed(2));
+    const buy2perUnit = buy2total / 2;
+    const d2 = makeDeal(2, buy2perUnit);
     const v2 = {
-        label: 'Buy 2 - Get $5 Off',
-        subtitle: `$${buy2_5perUnit.toFixed(2)} each`,
-        badge: '$5 OFF',
-        isBestDeal: true,
+        label: `Buy 2 - Get $${dollarOff2} Off`,
+        subtitle: `$${buy2perUnit.toFixed(2)} each`,
+        badge: `$${dollarOff2} OFF`,
+        badgeColor: 'yellow',
         ...d2,
     };
 
-    // --- 3: Buy 2 - Get $10 Off ---
-    const buy2_10total = parseFloat((sp * 2 - 10).toFixed(2));
-    const buy2_10perUnit = buy2_10total / 2;
-    const d3 = makeDeal(2, buy2_10perUnit);
+    // --- 3: Buy 2 & Save 15% ---
+    const buy2save15perUnit = parseFloat((sp * 0.85).toFixed(2));
+    const d3 = makeDeal(2, buy2save15perUnit);
     const v3 = {
-        label: 'Buy 2 - Get $10 Off',
-        subtitle: `$${buy2_10perUnit.toFixed(2)} each`,
-        badge: '$10 OFF',
-        isBestDeal: true,
+        label: 'Buy 2 & Save 15%',
+        subtitle: `${d3.discountVsSingle}% off per item`,
+        badge: '15% OFF',
+        badgeColor: 'yellow',
         ...d3,
     };
 
@@ -112,7 +112,7 @@ function generatePricing(costPrice, cogPct) {
         ...d4,
     };
 
-    // --- 5: Buy 3 - Get $X Off ---
+    // --- 5: Buy 3 - Get $X Off (bigger dollar discount, ~28% off) ---
     const dollarOff3 = Math.round(sp);
     const buy3total = parseFloat((sp * 3 - dollarOff3).toFixed(2));
     const buy3perUnit = buy3total / 3;
@@ -134,6 +134,21 @@ function generatePricing(costPrice, cogPct) {
         badgeColor: 'orange',
         ...d6,
     };
+
+    const variations = [v1, v2, v3, v4, v5, v6];
+
+    // Auto-mark the deal with highest discount (highest COG%) as best deal for customer
+    let bestIdx = -1;
+    let highestCog = 0;
+    variations.forEach((v, i) => {
+        if (i === 0) return;
+        const cogVal = parseFloat(v.cog);
+        if (cogVal > highestCog) {
+            highestCog = cogVal;
+            bestIdx = i;
+        }
+    });
+    if (bestIdx >= 0) variations[bestIdx].isBestDeal = true;
 
     return variations;
 }
