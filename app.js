@@ -113,7 +113,7 @@ function generatePricing(costPrice, cogPct) {
     };
 
     // --- 5: Buy 3 - Get $X Off (scales with price, $10-$50) ---
-    const dollarOff3 = (sp >= 80) ? 50 : (sp >= 60) ? 40 : (sp >= 45) ? 30 : (sp >= 30) ? 20 : (sp >= 20) ? 15 : 10;
+    const dollarOff3 = (sp >= 80) ? 80 : (sp >= 60) ? 60 : (sp >= 45) ? 50 : (sp >= 30) ? 40 : 40;
     const buy3total = parseFloat((sp * 3 - dollarOff3).toFixed(2));
     const buy3perUnit = buy3total / 3;
     const d5 = makeDeal(3, buy3perUnit);
