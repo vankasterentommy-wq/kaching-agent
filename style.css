@@ -204,6 +204,21 @@ header h1 {
     font-weight: 400;
 }
 
+.cost-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.cost-input-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+}
+
 .cost-input-wrapper {
     display: flex;
     align-items: center;

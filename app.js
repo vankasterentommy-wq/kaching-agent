@@ -194,9 +194,12 @@ function renderAll() {
         card.innerHTML = `
             <div class="product-top">
                 <input type="text" placeholder="Product name..." value="${escHtml(product.name)}" data-index="${index}" data-field="name">
-                <div class="cost-input-wrapper">
-                    <span>$</span>
-                    <input type="number" placeholder="0.00" step="0.01" min="0" value="${product.costPrice || ''}" data-index="${index}" data-field="costPrice">
+                <div class="cost-input-group">
+                    <div class="cost-input-label">CJ price incl. shipping</div>
+                    <div class="cost-input-wrapper">
+                        <span>$</span>
+                        <input type="number" placeholder="0.00" step="0.01" min="0" value="${product.costPrice || ''}" data-index="${index}" data-field="costPrice">
+                    </div>
                 </div>
                 <button class="btn btn-icon" data-delete="${index}">&times;</button>
             </div>
