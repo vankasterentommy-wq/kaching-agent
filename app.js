@@ -125,13 +125,13 @@ function generatePricing(costPrice, cogPct) {
         ...d5,
     };
 
-    // --- 6: Buy 2 Get 1 FREE (always best value, 33% off per unit) ---
+    // --- 6: Buy 2 Get 1 FREE (33% off per unit) ---
     const d6 = makeDeal(3, b2g1fPerUnit);
     const v6 = {
         label: 'Buy 2 Get 1 FREE',
-        subtitle: 'Best value - pay for 2, get 3',
-        badge: 'BEST DEAL',
-        badgeColor: 'green',
+        subtitle: 'Pay for 2, get 3',
+        badge: 'FREE ITEM',
+        badgeColor: 'orange',
         ...d6,
     };
 
