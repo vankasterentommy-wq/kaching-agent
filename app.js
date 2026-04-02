@@ -135,7 +135,22 @@ function generatePricing(costPrice, cogPct) {
         ...d6,
     };
 
-    return [v1, v2, v3, v4, v5, v6];
+    const variations = [v1, v2, v3, v4, v5, v6];
+
+    // Auto-mark the deal with lowest COG% as best deal
+    let bestIdx = -1;
+    let lowestCog = Infinity;
+    variations.forEach((v, i) => {
+        if (i === 0) return;
+        const cogVal = parseFloat(v.cog);
+        if (cogVal < lowestCog) {
+            lowestCog = cogVal;
+            bestIdx = i;
+        }
+    });
+    if (bestIdx >= 0) variations[bestIdx].isBestDeal = true;
+
+    return variations;
 }
 
 // --- Rendering ---
@@ -147,7 +162,7 @@ function badgeClass(color) {
 
 function renderVariation(v) {
     return `
-        <div class="price-option ${v.badgeColor === 'green' ? 'best-deal' : ''}">
+        <div class="price-option ${v.isBestDeal ? 'best-deal' : ''}">
             <div class="price-option-header">
                 <span class="price-label-title">${v.label}</span>
                 ${v.badge ? `<span class="price-badge ${badgeClass(v.badgeColor)}">${v.badge}</span>` : ''}
