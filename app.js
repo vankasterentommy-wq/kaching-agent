@@ -37,22 +37,12 @@ function generatePricing(costPrice, cogPct) {
     const wasPrice = Math.max(anchor.price, sp * 1.8);
     const wasSingle = makeAttractive(wasPrice).price;
 
-    // Fixed discount percentages per unit vs single price
-    // Hierarchy: each deal MUST be cheaper per unit than the previous
-    const discounts = {
-        bogo50: 0.25,     // 25% off each (2 items)
-        buy2save: 0.15,   // 15% off each (2 items)
-        b2g1free: 0.333,  // 33% off each (3 items, pay for 2)
-        best3: 0.30,      // 30% off each (3 items)
-        mega5: 0.40,      // 40% off each (5 items)
-    };
-
-    function makeDeal(qty, discountPct) {
-        const perUnit = sp * (1 - discountPct);
+    // Helper: build deal object from qty and per-unit price
+    function makeDeal(qty, perUnit) {
         const totalPrice = parseFloat((perUnit * qty).toFixed(2));
         const original = parseFloat((wasSingle * qty).toFixed(2));
         const savePct = Math.round((1 - totalPrice / original) * 100);
-        const discountVsSingle = Math.round(discountPct * 100);
+        const discountVsSingle = Math.round((1 - perUnit / sp) * 100);
         return {
             price: totalPrice,
             display: `$${totalPrice.toFixed(2)}`,
@@ -65,7 +55,13 @@ function generatePricing(costPrice, cogPct) {
         };
     }
 
-    // --- Variation 1: Single Set ---
+    // B2G1F is always best value = pay for 2, get 3 (33.3% off per unit)
+    const b2g1fPerUnit = parseFloat(((sp * 2) / 3).toFixed(2));
+
+    // All other deals must have LESS discount per unit than B2G1F
+    // Hierarchy (low to high discount): v1 < v2 < v3 < v4 < v5 < v6(B2G1F)
+
+    // --- 1: Single Set ---
     const singleSave = Math.round((1 - sp / wasSingle) * 100);
     const v1 = {
         label: 'Single Set',
@@ -81,53 +77,61 @@ function generatePricing(costPrice, cogPct) {
         totalProfit: (sp - costPrice).toFixed(2),
     };
 
-    // --- Variation 2: Buy 2 & Save (15% off each) ---
-    const d2 = makeDeal(2, discounts.buy2save);
+    // --- 2: Buy 2 - Get $X Off (fixed dollar discount, ~10% off) ---
+    const dollarOff2 = Math.round(sp * 0.10);
+    const buy2total = parseFloat((sp * 2 - dollarOff2).toFixed(2));
+    const buy2perUnit = buy2total / 2;
+    const d2 = makeDeal(2, buy2perUnit);
     const v2 = {
-        label: 'Buy 2 & Save',
-        subtitle: `${d2.discountVsSingle}% off per item`,
-        badge: `$${(sp * 2 - d2.price).toFixed(0)} OFF`,
+        label: `Buy 2 - Get $${dollarOff2} Off`,
+        subtitle: `$${buy2perUnit.toFixed(2)} each`,
+        badge: `$${dollarOff2} OFF`,
         badgeColor: 'yellow',
         ...d2,
     };
 
-    // --- Variation 3: Buy 1 Get 1 50% Off (25% off each) ---
-    const d3 = makeDeal(2, discounts.bogo50);
+    // --- 3: Buy 2 & Save 15% ---
+    const buy2save15perUnit = parseFloat((sp * 0.85).toFixed(2));
+    const d3 = makeDeal(2, buy2save15perUnit);
     const v3 = {
-        label: 'Buy 1 Get 1 50% Off',
-        subtitle: 'Add a second set mix & match',
-        badge: '50% OFF',
-        badgeColor: 'orange',
+        label: 'Buy 2 & Save 15%',
+        subtitle: `${d3.discountVsSingle}% off per item`,
+        badge: '15% OFF',
+        badgeColor: 'yellow',
         ...d3,
     };
 
-    // --- Variation 4: Best Value 3-Pack (30% off each) ---
-    const d4 = makeDeal(3, discounts.best3);
+    // --- 4: Buy 1 Get 1 50% Off (25% off per unit) ---
+    const bogo50perUnit = parseFloat((sp * 0.75).toFixed(2));
+    const d4 = makeDeal(2, bogo50perUnit);
     const v4 = {
-        label: 'Best Value - 3 Pack',
-        subtitle: 'Most popular choice',
-        badge: `${d4.discountVsSingle}% OFF`,
-        badgeColor: 'yellow',
+        label: 'Buy 1 Get 1 50% Off',
+        subtitle: 'Add a second set mix & match',
+        badge: '50% OFF 2ND',
+        badgeColor: 'orange',
         ...d4,
     };
 
-    // --- Variation 5: Buy 2 Get 1 Free (33% off each) ---
-    const d5 = makeDeal(3, discounts.b2g1free);
+    // --- 5: Buy 3 - Get $X Off (bigger dollar discount, ~28% off) ---
+    const dollarOff3 = Math.round(sp);
+    const buy3total = parseFloat((sp * 3 - dollarOff3).toFixed(2));
+    const buy3perUnit = buy3total / 3;
+    const d5 = makeDeal(3, buy3perUnit);
     const v5 = {
-        label: 'Buy 2 Get 1 FREE',
-        subtitle: '3 items for the price of 2',
-        badge: 'FREE ITEM',
-        badgeColor: 'green',
+        label: `Buy 3 - Get $${dollarOff3} Off`,
+        subtitle: `Save $${dollarOff3} on 3 items`,
+        badge: `$${dollarOff3} OFF`,
+        badgeColor: 'orange',
         ...d5,
     };
 
-    // --- Variation 6: Mega Pack 5 items (40% off each) ---
-    const d6 = makeDeal(5, discounts.mega5);
+    // --- 6: Buy 2 Get 1 FREE (always best value, 33% off per unit) ---
+    const d6 = makeDeal(3, b2g1fPerUnit);
     const v6 = {
-        label: 'Mega Pack - 5 items',
-        subtitle: 'Biggest savings',
-        badge: `${d6.discountVsSingle}% OFF`,
-        badgeColor: 'red',
+        label: 'Buy 2 Get 1 FREE',
+        subtitle: 'Best value - pay for 2, get 3',
+        badge: 'BEST DEAL',
+        badgeColor: 'green',
         ...d6,
     };
 
